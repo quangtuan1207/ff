@@ -3,55 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Podev VIP - Quản Lý Key</title>
+    <title>ADMIN PODEV</title>
     <style>
-        body { background: #000; color: #ffcc00; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .box { border: 2px solid #ffcc00; padding: 20px; display: inline-block; border-radius: 15px; background: #111; }
-        input { padding: 10px; border-radius: 5px; border: 1px solid #ffcc00; background: #222; color: #fff; margin-bottom: 10px; }
-        button { padding: 10px 20px; background: #ffcc00; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .back-btn { margin-top: 20px; display: block; color: #888; text-decoration: none; font-size: 12px; }
+        body { background: #000; color: #ffcc00; font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
+        .admin-box { border: 2px solid #ffcc00; padding: 30px; border-radius: 15px; background: #111; width: 300px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #ffcc00; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div class="admin-box">
+        <h3>QUẢN LÝ KEY</h3>
+        <input type="text" id="newKey" placeholder="Nhập Key muốn tạo...">
+        <button onclick="addKey()">TẠO & LƯU LÊN SERVER</button>
+        <p style="font-size: 11px; color: #666; margin-top: 15px;">Key tạo xong sẽ có tác dụng ngay lập tức</p>
+        <a href="index.html" style="color: #ffcc00; text-decoration: none; font-size: 13px;">← Quay lại</a>
+    </div>
 
-<div class="box">
-    <h2>QUẢN LÝ KEY VIP</h2>
-    <input type="text" id="newKey" placeholder="Nhập Key muốn tạo...">
-    <br>
-    <button onclick="addKey()">THÊM KEY VÀO HỆ THỐNG</button>
-    <a href="index.html" class="back-btn"> Quay lại trang đăng nhập</a>
-</div>
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAqGF_uqCeBhLVsCxtdNrfsS8kF5pXYV1PHHmYKF_geiL1809gFRPSdR628LMUGCaGUQ/exec";
 
-<script>
-    // Kiểm tra xem có phải là Admin không, nếu không thì đuổi ra
-    if (localStorage.getItem("role") !== "admin") {
-        alert("Bạn không có quyền truy cập!");
-        window.location.href = "index.html";
-    }
-
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYzrUCNYFvF082Wcn59CWZvcqzyhEJf-s9cPiv9GQ_T-5fLrGZ48gbmXa6xIlb1VD8kQ/exec";
-
-    function addKey() {
-        const key = document.getElementById('newKey').value;
-        if (!key) return alert("Nhập key đã bạn ơi!");
-
-        const btn = document.querySelector('button');
-        btn.innerText = "ĐANG TẠO...";
-
-        fetch(`${SCRIPT_URL}?action=add&key=${key}`)
-            .then(res => res.text())
-            .then(data => {
-                if (data.trim() === "Success") {
-                    alert("Đã thêm Key: " + key + " thành công!");
+        function addKey() {
+            const key = document.getElementById('newKey').value.trim();
+            if(!key) return alert("Nhập key!");
+            
+            document.querySelector('button').innerText = "ĐANG LƯU...";
+            
+            fetch(`${SCRIPT_URL}?action=add&key=${key}`)
+                .then(res => res.text())
+                .then(data => {
+                    alert("ĐÃ TẠO THÀNH CÔNG KEY: " + key);
                     document.getElementById('newKey').value = "";
-                } else {
-                    alert("Lỗi khi thêm key!");
-                }
-                btn.innerText = "THÊM KEY VÀO HỆ THỐNG";
-            })
-            .catch(() => alert("Lỗi kết nối!"));
-    }
-</script>
-
+                    document.querySelector('button').innerText = "TẠO & LƯU LÊN SERVER";
+                });
+        }
+    </script>
 </body>
 </html>
