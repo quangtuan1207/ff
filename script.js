@@ -1,5 +1,5 @@
 // Thay link /exec của bạn vào đây
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbsKtdToqUgQ47XzRw14_QVGuS0MYa9aB7DOaT8T_u5CiUZ-lb6cV1mG00fFi8nqVoOg/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYzrUCNYFvF082Wcn59CWZvcqzyhEJf-s9cPiv9GQ_T-5fLrGZ48gbmXa6xIlb1VD8kQ/exec";
 
 function login() {
     const keyInput = document.getElementById('key').value;
