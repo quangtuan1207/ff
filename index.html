@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PODEV VIP MENU</title>
+    <style>
+        :root { --gold: #ffcc00; --dark: #0a0a0a; --glow: rgba(255, 204, 0, 0.4); }
+        body { margin: 0; background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        /* Hiệu ứng nền động hạt vàng */
+        #bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
+
+        .container { width: 90%; max-width: 350px; background: rgba(20, 20, 20, 0.95); border: 2px solid var(--gold); border-radius: 25px; padding: 30px 20px; box-shadow: 0 0 30px var(--glow); text-align: center; position: relative; animation: fadeIn 0.8s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; text-shadow: 0 0 15px var(--gold); font-size: 28px; }
+
+        /* Giao diện Đăng nhập */
+        .input-group { margin-bottom: 20px; }
+        input { width: 85%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #111; color: var(--gold); font-size: 16px; outline: none; text-align: center; transition: 0.3s; }
+        input:focus { border-color: var(--gold); box-shadow: 0 0 10px var(--glow); }
+
+        .btn { width: 95%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.4s; text-transform: uppercase; }
+        .btn-gold { background: var(--gold); color: #000; box-shadow: 0 5px 15px var(--glow); }
+        .btn-gold:hover { transform: scale(1.03); background: #fff; }
+
+        /* Giao diện Menu */
+        .menu-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 15px; margin-bottom: 12px; border-left: 4px solid var(--gold); }
+        .menu-item span { font-weight: 500; font-size: 15px; letter-spacing: 1px; }
+
+        /* Switch hiệu ứng cao cấp */
+        .switch { position: relative; width: 45px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--gold); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .footer-link { margin-top: 20px; font-size: 12px; color: #666; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div id="bg"></div>
+
+    <div id="login-box" class="container">
+        <h1>PODEV VIP</h1>
+        <div class="input-group">
+            <input type="text" id="key" placeholder="NHẬP KEY KÍCH HOẠT...">
+        </div>
+        <button class="btn btn-gold" onclick="login()">KÍCH HOẠT NGAY</button>
+        <p style="font-size: 12px; color: #888; margin-top: 15px;">Dành riêng cho thành viên 11A1</p>
+    </div>
+
+    <div id="menu-box" class="container" style="display:none">
+        <h1>PODEV MENU</h1>
+        
+        <div class="menu-item">
+            <span>FIX RUNG 100%</span>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+        </div>
+        
+        <div class="menu-item">
+            <span>NHẸ TÂM (SMOOTH)</span>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+        </div>
+
+        <div class="menu-item">
+            <span>AUTO HEADSHOT</span>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+        </div>
+
+        <button class="btn btn-gold" style="background: #10b981; color: #fff; margin-top: 10px;" onclick="location.href='freefire://'">VÀO GAME</button>
+        
+        <div class="footer-link" onclick="logout()">Đăng xuất thiết bị</div>
+    </div>
+
+    <script>
+        // Link Google Script đã triển khai (Deploy) của bạn
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9X6k0GjS3qbtjybEffpxS5LIDtGqX0s_r3lO-TkGAGE5HlZX8NeuWEsUJaMvtN0bN3Q/exec";
+
+        function login() {
+            const keyVal = document.getElementById('key').value;
+            if(!keyVal) return alert("Vui lòng nhập mã Key!");
+            
+            document.querySelector('.btn-gold').innerText = "ĐANG KIỂM TRA...";
+
+            fetch(`${SCRIPT_URL}?action=check&key=${keyVal}`)
+            .then(res => res.text())
+            .then(data => {
+                if(data.trim() === "Valid") {
+                    localStorage.setItem("podev_auth", "true");
+                    showMenu();
+                } else {
+                    alert("Key không chính xác hoặc đã hết hạn!");
+                    document.querySelector('.btn-gold').innerText = "KÍCH HOẠT NGAY";
+                }
+            })
+            .catch(() => {
+                alert("Lỗi kết nối Server!");
+                document.querySelector('.btn-gold').innerText = "KÍCH HOẠT NGAY";
+            });
+        }
+
+        function showMenu() {
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('menu-box').style.display = 'block';
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        // Tự động vào Menu nếu đã đăng nhập trước đó
+        window.onload = () => {
+            if(localStorage.getItem("podev_auth") === "true") showMenu();
+        }
+    </script>
+</body>
+</html>
